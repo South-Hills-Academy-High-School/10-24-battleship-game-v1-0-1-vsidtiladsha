@@ -49,11 +49,16 @@ function makeBoatVisible (boatArray: Sprite[]) {
     }
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    currentBoat += 1
-    grid.place(cursor, tiles.getTileLocation(0, 0))
-    if (currentBoat == 3) {
-        currentBoat = 0
-        switchPlayer()
+    if (moveBoatFlag == 3) {
+        cursor.setFlag(SpriteFlag.AutoDestroy, false)
+    } else {
+        currentBoat += 1
+        grid.place(cursor, tiles.getTileLocation(0, 0))
+        if (currentBoat == 3) {
+            currentBoat = 0
+            switchPlayer()
+            moveBoatFlag += 1
+        }
     }
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -62,6 +67,9 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     grid.place(shadowCursor, tiles.getTileLocation(grid.spriteCol(cursor) + 1, grid.spriteRow(cursor)))
 })
 function switchPlayer () {
+    if (true) {
+        cursor.setFlag(SpriteFlag.AutoDestroy, false)
+    }
     if (currentPlayer == "Player1") {
         currentPlayer = "Player2"
         for (let value of boatSpriteArrayP1) {
@@ -527,5 +535,7 @@ shadowCursor = sprites.create(img`
 grid.snap(cursor)
 grid.snap(shadowCursor)
 game.onUpdate(function () {
-    updatePX(currentPlayer)
+    if (moveBoatFlag == 0) {
+        updatePX(currentPlayer)
+    }
 })
